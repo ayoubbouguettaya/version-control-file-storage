@@ -1,5 +1,3 @@
-# Code Source for the Project discussed in foobarz.blog
-foobarz.blog is my personel blog
-
-## Link to the Blog Post
+# Code Source for Blog #1
+## Using File System Storage on Nodejs and manage the Versioning with Git
 https://foobarz.blog/posts/file-storage-&-git-versionning
