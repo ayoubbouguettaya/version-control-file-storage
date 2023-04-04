@@ -32,6 +32,14 @@ const FormPanel = (props: Props) => {
         setShowModal(false)
     }
 
+
+    const handleRemoveParams = (key: string) => {
+        setValues((previousValues) => {
+            delete values[key]
+            return ({ ...previousValues })
+        });
+    }
+
     const saveData = (data: any) => {
         const stringifiedData = JSON.stringify({ data: JSON.stringify(data), commitMessage: commitMessage.newcommitMessage, author: props.author })
 
@@ -41,7 +49,7 @@ const FormPanel = (props: Props) => {
                 'Content-Type': 'application/json'
             }, body: stringifiedData
         })
-        
+
         mutate('http://localhost:3000/data')
         mutate('http://localhost:3000/commit-history')
 
@@ -60,6 +68,10 @@ const FormPanel = (props: Props) => {
                     <div key={Itemkey} className={styles.form_item}>
                         <label htmlFor={Itemkey}>
                             {Itemkey}
+
+                           <button onClick={() => handleRemoveParams(Itemkey)}>
+                           🗑
+                            </button> 
                         </label>
                         <input key={index} name={Itemkey} value={Itemvalue} placeholder={Itemkey} onChange={handleOnChange} />
                     </div>

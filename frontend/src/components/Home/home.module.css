@@ -5,24 +5,23 @@
 
 .main {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
 }
 
 .main>div {
-    width: 49%;
+    width: 45%;
 }
 
 .form_panel .modal,
 .home_container button,
-.historic_panel li,
-.historic_panel {
-    border: 1px solid coral;
+.historic_panel li {
+    border: 1px solid rgb(235, 214, 207);
 }
 
 .form_panel {
     border-radius: 8px;
-    background-color: rgb(50, 56, 80);
-    color: #eee;
+    background-color: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
 }
 
 .form_panel .header {

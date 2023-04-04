@@ -59,7 +59,7 @@ export class AppService {
   async getData() {
     // js0n stringify parsed yam1
     console.log(await readFile(getFilePath(), "utf-8"))
-    return JSON.stringify(parse(await readFile(getFilePath(), "utf-8")))
+    return JSON.stringify(parse(await readFile(getFilePath(), "utf-8"))|| {})
   }
 
   async saveData(saveDataDto: SaveDataDto) {

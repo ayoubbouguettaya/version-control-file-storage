@@ -1,6 +1,4 @@
-# Frontend
-
-this Project was scaffolded By Vitejs.
+# Frontend was scaffolded By Vitejs.
 
 ## Structure of the Project
 

@@ -10,8 +10,8 @@ export class AppController {
   @Get('data')
   async getData() {
     const content = await this.appService.getData();
-    console.log('content: ', content, '\n')
-    return content;
+    console.log('content: ', content || "qeqve" ,'\n')
+    return content || "{}";
   }
 
   @Post('data')

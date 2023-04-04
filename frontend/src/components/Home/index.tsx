@@ -17,7 +17,7 @@ const HomeComponent = (props: Props) => {
 
   return (
     <div className={styles.home_container}>
-      <h1>Manage the version our System Configuration</h1>
+      <h2>Playarround with file storage system and Git for versionning management</h2>
       <AuthenticatedUserPanel userName={userName} setUserName={setUserName} />
       <div className={styles.main}>
 
