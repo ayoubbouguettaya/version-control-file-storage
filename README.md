@@ -1,6 +1,4 @@
-# Code Source for the Project discussed in foobarz.blog
-
-Play arround with Git and file storage  in Node JS.
- 
-## Link to the Blog Post
+# Code Source for Blog #1
+## Play arround with Git and file storage  in Node JS.
+>>>>>>> 4139fec2e6c6a20657e01064e789b1d5448310cf
 https://foobarz.blog/posts/file-storage-&-git-versionning
