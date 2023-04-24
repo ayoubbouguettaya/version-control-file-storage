@@ -14,29 +14,49 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
-
 :root {
   --diff-background-color: initial;
   --diff-text-color: initial;
   --diff-font-family: Consolas, Courier, monospace;
-  --diff-selection-background-color: #b3d7ff;
-  --diff-gutter-insert-background-color: #d6fedb;
-  --diff-gutter-delete-background-color: #fadde0;
+  --diff-selection-background-color: #8ab3e2;
+  --diff-gutter-insert-background-color: #57e467;
+  --diff-gutter-delete-background-color: #d3606b;
+  --diff-gutter-insert: #57e467;
+  --diff-gutter-delete: #d3606b;
   --diff-gutter-selected-background-color: #fffce0;
-  --diff-code-insert-background-color: #b3f1be;
-  --diff-code-delete-background-color: #f5bfc3;
+  --diff-code-insert-background-color: #aacfb1;
+  --diff-code-delete-background-color: #d1787e;
   --diff-code-insert-edit-background-color: #c0dc91;
   --diff-code-delete-edit-background-color: #f39ea2;
   --diff-code-selected-background-color: #fffce0;
   --diff-omit-gutter-line-color: #cb2a1d;
 }
 
-.diff-code-insert {
-  background-color: var(--diff-code-insert-background-color);
+.diff{
+  width: 100%;
+  background-color: #213547;
+  color: #f5e8c4;
+  padding: 20px 40px;
+  border-radius: 5px;
 }
 
-.diff-code-delete {
-  background-color: var(--diff-code-delete-background-color)
+.diff-code-insert ,
+.diff-code-delete ,
+.diff-gutter-insert,
+.diff-gutter-delete{
+  font-family: var(--diff-font-family);
+  font-weight: bold;
+  font-style: italic;
+}
+
+.diff-code-insert ,
+.diff-gutter-insert{
+  color: var(--diff-gutter-insert)
+}
+
+.diff-code-delete ,
+.diff-gutter-delete{
+  color: var(--diff-gutter-delete)
 }
 
 a {

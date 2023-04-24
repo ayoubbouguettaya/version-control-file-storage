@@ -3,8 +3,8 @@ import useSWR from 'swr'
 
 import styles from './home.module.css'
 import HistoricPanel from './helpers/HistoricPanel'
-import FormPanel from './helpers/FormPanel'
 import AuthenticatedUserPanel from './helpers/AuthenticatedUserPanel'
+import EditorPanel from './helpers/EditorPanel'
 
 export const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -28,7 +28,7 @@ const HomeComponent = (props: Props) => {
             {error && <p style={{ color: "red" }} >{typeof error === "string" ? error : JSON.stringify(error)}</p>}
           </div>}
         {!error && !isLoading && content ?
-          <FormPanel author={userName} content={content} /> :
+          <EditorPanel data={content} author={userName} /> :
           <div className={styles.form_panel}>
             <p>Is Loading</p>
             {error && <p style={{ color: "red" }} >{typeof error === "string" ? error : JSON.stringify(error)}</p>}
