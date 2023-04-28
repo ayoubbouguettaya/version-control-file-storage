@@ -9,9 +9,6 @@ this application serve a Restfull API,using File storage to save ,edit and get t
 - `simple-git`: A lightweight interface for running git commands in any node.js application.
 link to [NPM package simple-git](https://www.npmjs.com/package/simple-git)
 
-- `yaml`: yaml is a definitive library for YAML, the human friendly data serialization standard.
-link to [NPM package YAML](https://www.npmjs.com/package/yaml)
-
 ## Api
 
 - `GET '/data'`: endpoint to get the Data (JSON format).in one step using file system API 'ReadFile' to read the file and parse it from Yaml to JSON format and serve it.
