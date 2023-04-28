@@ -2,5 +2,4 @@
 ## Play arround with Git and file storage  in Node JS.
 https://foobarz.blog/posts/file-storage-&-git-versionning
 
-![Screenshot from 2023-04-04 03-01-30](https://user-images.githubusercontent.com/63568455/229668982-c4c2f89d-46c9-406e-b3ae-e34ec9114afd.png)
-
+![ezgif com-gif-maker(2)](https://user-images.githubusercontent.com/63568455/235022915-9870c1f0-b991-4bb1-80f9-c8e2c231cdae.gif)
