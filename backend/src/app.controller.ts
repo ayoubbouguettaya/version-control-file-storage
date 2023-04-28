@@ -10,17 +10,13 @@ export class AppController {
   @Get('data')
   async getData() {
     const content = await this.appService.getData();
-    console.log('content: ', content || "qeqve" ,'\n')
-    return content || "{}";
+    return { content };
   }
 
   @Post('data')
   async saveData(
     @Body() data: SaveDataDto
   ) {
-    console.log("================================================")
-    console.log(data)
-    console.log("================================================")
     return await this.appService.saveData(data);
   }
 

@@ -36,22 +36,21 @@ const EditorPanel = (props: Props) => {
 
     const [commitMessage, OnChangeNewcommitMessageValue, setcommitMessage] = useForm({ newcommitMessage: "commit message" })
 
-    const saveData = () => {
+    const saveData = async () => {
         const data = editorRef?.current?.getValue()
 
-        const stringifiedData = JSON.stringify({ data: JSON.stringify(data), commitMessage: commitMessage.newcommitMessage, author: props.author })
+        const body = { data, commitMessage: commitMessage.newcommitMessage, author: props.author }
 
-        fetch('http://localhost:3000/data', {
+        await fetch('http://localhost:3000/data', {
             method: 'POST', headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-            }, body: stringifiedData
+            }, body: JSON.stringify(body)
         })
 
-        mutate('http://localhost:3000/data')
-        mutate('http://localhost:3000/commit-history')
-
+        await mutate('http://localhost:3000/commit-history')
     }
+
     return (
         <div>
             <div >

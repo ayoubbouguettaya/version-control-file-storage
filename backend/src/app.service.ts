@@ -5,7 +5,6 @@ import simpleGit, { DefaultLogFields, SimpleGit } from 'simple-git';
 
 import { SaveDataDto } from './dto/save-data.dto';
 import { GetHistoryPaginationDto } from './dto/get-history-pagination.dto';
-import { parse, stringify } from 'yaml'
 
 const BASE_DIR = join(__dirname, '../src/.repos')
 
@@ -13,6 +12,19 @@ const FileName = "setting.yaml";
 
 const getFilePath = () => (join(BASE_DIR, FileName))
 
+const defaultValue = `
+apiVersion: v1
+kind: {{defaultvalue-kind}}
+metadata:
+  name: {{defaultvalue-name}}
+spec:
+  containers:
+  - name: {{defaultvalue-container-name}}
+    image: {{defaultvalue-image-name}}
+    env:
+    - name: {{defaultvalue}}
+      value: {{defaultvalue}}
+`;
 
 @Injectable()
 export class AppService {
@@ -42,12 +54,12 @@ export class AppService {
   private async createFileFirstTime() {
     try {
 
-      await writeFile(getFilePath(), stringify({ field1: "value1" }));
+      await writeFile(getFilePath(), defaultValue);
       await this.git.addConfig('user.name', 'unkown');
       await this.git.addConfig('user.email', `admin@foobarz.blog`);
 
       await this.git.add('.');
-      await this.git.commit("first commit");
+      await this.git.commit("first commit // create a template yaml file with defaultvalue");
 
 
       return 'ok';
@@ -57,17 +69,19 @@ export class AppService {
   }
 
   async getData() {
-    // js0n stringify parsed yam1
-    console.log(await readFile(getFilePath(), "utf-8"))
-    return JSON.stringify(parse(await readFile(getFilePath(), "utf-8"))|| {})
+    try {
+      return await readFile(getFilePath(), "utf-8")
+    } catch (error) {
+      console.log("Error getting Data")
+      return ""      
+    }
   }
 
   async saveData(saveDataDto: SaveDataDto) {
     const { data, commitMessage, author } = saveDataDto;
-    console.log("inside[saveData] service", saveDataDto)
 
     // yam1 stringify parsed json
-    await writeFile(getFilePath(), stringify(JSON.parse(data)));
+    await writeFile(getFilePath(), data);
     await this.git.addConfig('user.name', author || 'unkown');
     await this.git.addConfig('user.email', `${author}@foobarz.blog`);
 
@@ -115,13 +129,25 @@ export class AppService {
 
   async getChangesAndDataStateByCommit(commitHash: string) {
     try {
-      console.log('[getChangesAndDataStateByCommit] commitHash', commitHash)
       const pathfileName = getFilePath();
 
       const data = await this.git.show([`${commitHash}:${FileName}`]);
       const changes = await this.git.show([commitHash, '--pretty=format:%b', '--', pathfileName]);
 
-      return { data, changes }
+
+    const { all: commits } =
+    await this.git.log<DefaultLogFields>([
+      `--max-count=1`,
+      commitHash,
+      '--',
+      pathfileName,
+    ]);
+
+      const author = commits[0].author_name
+      const subject = commits[0].message
+      
+
+      return { data, changes ,author,subject}
     } catch (error) {
       throw new Error(error.message);
     }

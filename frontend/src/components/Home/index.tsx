@@ -12,8 +12,9 @@ type Props = {}
 
 const HomeComponent = (props: Props) => {
   const [userName, setUserName] = useState("ayoubbouguettaya")
-  const { data: content, error, isLoading } = useSWR('http://localhost:3000/data', fetcher)
-  const { data: history, error: errorHistory, isLoading: isLoadingHistory } = useSWR('http://localhost:3000/commit-history', fetcher)
+  const { data, isLoading } = useSWR('http://localhost:3000/data', fetcher)
+
+  const { data: history, isLoading: isLoadingHistory } = useSWR('http://localhost:3000/commit-history', fetcher)
 
   return (
     <div className={styles.home_container}>
@@ -21,17 +22,15 @@ const HomeComponent = (props: Props) => {
       <AuthenticatedUserPanel userName={userName} setUserName={setUserName} />
       <div className={styles.main}>
 
-        {!errorHistory && !isLoadingHistory && history ?
+        {!isLoadingHistory && history ?
           <HistoricPanel history={history} /> :
           <div className={styles.historic_panel}>
             <p>Is Loading</p>
-            {error && <p style={{ color: "red" }} >{typeof error === "string" ? error : JSON.stringify(error)}</p>}
           </div>}
-        {!error && !isLoading && content ?
-          <EditorPanel data={content} author={userName} /> :
+        {!isLoading && data ?
+          <EditorPanel data={data.content} author={userName} /> :
           <div className={styles.form_panel}>
             <p>Is Loading</p>
-            {error && <p style={{ color: "red" }} >{typeof error === "string" ? error : JSON.stringify(error)}</p>}
           </div>}
       </div>
     </div>
