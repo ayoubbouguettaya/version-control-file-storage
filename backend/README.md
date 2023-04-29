@@ -1,26 +1,98 @@
-# Backend
 
-this Project was scaffolded By Nestjs.
+We will be using NestJs, which is a Node.js framework, and getting started with Nest CLI to scaffold the project and generate some boilerplate code
 
-this application serve a Restfull API,using File storage to save ,edit and get the data on a file located on `/opt/myapp/repo/settings.yaml` ,a git repository will be initialised on the that folder in order to be able to use Git tool to manage the versioning.
+-  controller class to define REST API Routing.
+-  service class to handle the Requests and Logics
 
-## Tools
+### Design our  Rest API Endpoints
 
-- `simple-git`: A lightweight interface for running git commands in any node.js application.
-link to [NPM package simple-git](https://www.npmjs.com/package/simple-git)
 
-## Api
+* **GET /data**: the endpoint to get the Data in YAML format .by reading the file "setting.yaml" in the repos
 
-- `GET '/data'`: endpoint to get the Data (JSON format).in one step using file system API 'ReadFile' to read the file and parse it from Yaml to JSON format and serve it.
+* **POST /data**: endpoint to save the data using File system Api 'writeFile' to the file path after that using the Git Commands in this order. `git add .` to stage the changes of the file , `git commit`  to record the changes staged for the file along with some meta data like the **author** ,**comment** and **timestamps** .
 
-- `POST '/data'`: endpoint to save the incoming Data (JSON format).in two step using File system Api 'writeFile' and parsing the data into yaml format we store the data in the file. after that using the Git Add + git commit  commands in order to stage the data and record the changes for that particular file,author attached with message or comment.
-`git config user.name {{author}} && git config user.name "{{author}}@foobarz.blogauthor"`
-`git add . && git commit -m {{commitMessage}}`
+```
+  async saveData(saveDataDto: SaveDataDto) {
+    const { data, commitMessage, author } = saveDataDto;
 
-- `GET '/commit-history'`: endpoint to get the list of commit history.in one step using Git Log command to get the commit history.the list can be huge thus we can filter the result by (max-count,skip)for pagination ,(-- filename) to get only the changes for that file.
+    await writeFile(getFilePath(), data);
+    await this.git.addConfig('user.name', author || 'unkown');
+    await this.git.addConfig('user.email', `${author}@foobarz.blog`);
 
-`git log --max-count={{size}} --skip{{(page - 1) * size}} -- {{filename}}`
+    await this.git.add('.');
+    await this.git.commit(commitMessage);
 
-- `GET '/data/:commitHash'`: endpoint to get the changes only related to a commit Hash in `git Diff Style`. using Git show command with prettier and specified file.
+    return data;
+  }
+```
 
-`git show {{commitHash}} --pretty=format:%b -- {{filename}}`
+
+* **GET /commit-history**: endpoint to get the list of git commit history of the file with pagination 
+
+```
+async getCommitHistory(pagination: GetHistoryPaginationDto) {
+    const {
+      size = 10,
+      page = 1,
+    } = pagination;
+
+    const query: string[] = []; // we can combine multiple queries like grep ,since ,after,author ect 
+    const fileName = getFilePath()
+
+    const { total: totalCount } = await this.git.log<DefaultLogFields>([
+      ...query,
+      '--',
+      fileName,
+    ]);
+
+    const { all: commits, total: pageLength } =
+      await this.git.log<DefaultLogFields>([
+        `--max-count=${size}`,
+        `--skip=${(page - 1) * size}`,
+        ...query,
+        '--',
+        fileName,
+      ]);
+
+    const maxPages = Math.ceil(totalCount / size);
+
+    return {
+      items: commits,
+      pageLength: pageLength,
+      page: page,
+      maxPages: maxPages,
+      size: size,
+      totalCount,
+    };
+  }
+```
+
+* **GET /data/:commitHash**: the endpoint to get the  file,changes,author and the comment linked to a commit hash.
+
+
+```
+
+  async getChangesAndDataStateByCommit(commitHash: string) {
+    try {
+      const pathfileName = getFilePath();
+
+      const data = await this.git.show([`${commitHash}:${FileName}`]);
+      const changes = await this.git.show([commitHash, '--pretty=format:%b', '--', pathfileName]);
+
+    const { all: commits } =
+    await this.git.log<DefaultLogFields>([
+      `--max-count=1`,
+      commitHash,
+      '--',
+      pathfileName,
+    ]);
+
+      const author = commits[0].author_name
+      const subject = commits[0].message
+
+      return { data, changes ,author,subject}
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
+```
